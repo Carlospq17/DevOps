@@ -24,7 +24,7 @@ class AuthController extends Controller
 
         //Se procede a validar las credenciales del usuario
         if(! $token = auth()->attempt($validator->validated())){
-            return response()->json(['error' => 'Unauthorized'],401);
+            return response()->json(['error' => 'Invalid Credentials'],400);
         }
 
         return $this->createToken($token);
