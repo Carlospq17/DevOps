@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Validator;
 use Illuminate\Http\Request;
-use App\Models\Client;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use App\Models\{Client, User};
+use Illuminate\Support\Facades\{Hash, DB};
+use Illuminate\Support\Str;
 
 class ClientController extends Controller
 {
@@ -74,6 +73,7 @@ class ClientController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->status = true;
+        $user->remember_token = Str::random(10);
 
         $client = new Client;
         $client->name = $request->name;
