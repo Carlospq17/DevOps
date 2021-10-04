@@ -20,18 +20,16 @@ class JwtMiddleware
     {
         try {
             if(empty($request->bearerToken())){
-                return response()->json(['message' => 'Authorization Token not found'],400);
+                return response()->json(['message' => 'Authorization Token not found'], 401);
             }
             $user = JWTAuth::parseToken()->authenticate();
             return $next($request);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $tie) {
+            return response()->json(['message' => 'Token is Invalid'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $tee) {
+            return response()->json(['message' => 'Token is Expired'], 401);
         } catch (Exception $e) {
-            if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
-                return response()->json(['message' => 'Token is Invalid'],400);
-            }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
-                return response()->json(['message' => 'Token is Expired'],400);
-            }else{
-                return response()->json(['message' => 'Authorization Token not found'],400);
-            }
+            return response()->json(['message' => 'Authorization Token not found'], 401);
         }
     }
 }
