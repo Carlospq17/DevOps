@@ -13,6 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(2)->create();
+        //genera un usuario y se relaciona con el cliente inmediato
+        \App\Models\User::factory(1)->create();
+        \App\Models\Client::factory(1)->create();
+
+        \App\Models\User::factory(1)->create();
+        \App\Models\Client::factory(1)->create();
+
+        \App\Models\Sale::factory(2)->create();
     }
 }
