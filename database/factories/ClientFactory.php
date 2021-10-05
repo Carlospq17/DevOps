@@ -2,19 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Models\Client;
 use App\Models\User;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserFactory extends Factory
+class ClientFactory extends Factory
 {
+    private $userId = 1;
+
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = Client::class;
 
     /**
      * Define the model's default state.
@@ -24,11 +25,11 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => Hash::make('root'), // password
-            'status' => true,
-            'remember_token' => Str::random(10)
+            'name' => $this->faker->name(),
+            'lastname' => $this->faker->name(),
+            'address' => $this->faker->address(),
+            'phone_number' => 9998783290,
+            'user_id' => User::all()->last()
         ];
     }
-
 }
