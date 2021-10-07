@@ -3,28 +3,28 @@
 namespace App\Http\Controllers;
 
 use Validator;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\{Client, User};
+use App\Services\ClientService;
 use Illuminate\Support\Facades\{Hash, DB};
-use Illuminate\Support\Str;
 
 class ClientController extends Controller
 {
-    public function getClientById($id) {
-        $client = Client::findOrFail($id);
-        $client->user;
+    protected $clientService;
 
-        return response()->json($client, 200);
+    public function __construct(ClientService $clientService){
+        $this->clientService = $clientService;
     }
 
-    public function getClient() {
-        $clients = Client::All();
+    public function getClientById($id) {
 
-        foreach($clients as $client) {
-            $client->user;
-        }
+        return response()->json($this->clientService->getClientById(), 200);
+    }
 
-        return response()->json($clients, 200);
+    public function getAllClients() {
+
+        return response()->json($this->clientService->getAllClients(), 200);
     }
 
     public function putClient(Request $request, $id) {
@@ -39,20 +39,7 @@ class ClientController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $client = Client::findOrFail($id);
-
-        $client->name = $request->name? $request->name : $client->name;
-        $client->lastname = $request->lastname? $request->lastname : $client->lastname;
-        $client->address = $request->address? $request->address : $client->address;
-        $client->phone_number = $request->phone_number? $request->phone_number : $client->phone_number;
-
-        DB::transaction(function () use ($client) {
-            $client->save();
-        });
-
-        $client->user;
-
-        return response()->json($client, 200);
+        return response()->json($this->clientService->updateClient($id,$request->name,$request->lastname,$request->address,$request->phone_number), 200);
     }
 
     public function postClient(Request $request) {
@@ -69,37 +56,11 @@ class ClientController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $user = new User;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->status = true;
-        $user->remember_token = Str::random(10);
 
-        $client = new Client;
-        $client->name = $request->name;
-        $client->lastname = $request->lastname;
-        $client->address = $request->address;
-        $client->phone_number = $request->phone_number;
-
-        DB::transaction(function () use ($user, $client) {
-            $user->save();
-
-            $client->user_id = $user->id;
-            $client->save();
-        });
-
-        $client->user;
-
-        return response()->json($client, 201);;
+        return response()->json($this->clientService->createClient($request->email,$request->password,$request->name,$request->lastname,$request->address,$request->phone_number), 201);
     }
 
     public function deleteClient($id) {
-        $client = Client::findOrFail($id);
-        $user = User::findOrFail($client->user_id);
-
-        DB::transaction(function () use ($client, $user) {    
-            $user->delete();
-            $client->delete();
-        });
+        return response()->json($this->clientService->deleteClient($id), 204);
     }
 }

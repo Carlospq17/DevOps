@@ -26,7 +26,7 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['middleware'=>'jwt.verify','prefix'=>'clients'], function () {
         Route::get('{id}', 'ClientController@getClientById')->where(['id' => '[0-9]+']);
-        Route::get('', 'ClientController@getClient');
+        Route::get('', 'ClientController@getAllClients');
         
         Route::put('{id}', 'ClientController@putClient')->where(['id' => '[0-9]+']);
 
