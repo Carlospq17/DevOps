@@ -18,7 +18,7 @@ class ClientController extends Controller
     }
 
     public function getClient() {
-        $clients = Client::All();
+        $clients = Client::all();
 
         foreach($clients as $client) {
             $client->user;
@@ -90,7 +90,7 @@ class ClientController extends Controller
 
         $client->user;
 
-        return response()->json($client, 201);;
+        return response()->json($client, 201);
     }
 
     public function deleteClient($id) {

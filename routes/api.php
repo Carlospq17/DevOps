@@ -26,22 +26,22 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['middleware'=>'jwt.verify','prefix'=>'clients'], function () {
         Route::get('{id}', 'ClientController@getClientById')->where(['id' => '[0-9]+']);
-        Route::get('', 'ClientController@getClient');
+        Route::get('', 'ClientController@getClient')->name('client.all');
         
         Route::put('{id}', 'ClientController@putClient')->where(['id' => '[0-9]+']);
 
-        Route::post('', 'ClientController@postClient');
+        Route::post('', 'ClientController@postClient')->name('client.create');
 
         Route::delete('{id}', 'ClientController@deleteClient')->where(['id' => '[0-9]+']);
     });
 
     Route::group(['middleware' => 'jwt.verify', 'prefix' => 'sales'], function () {
         Route::get('{id}', 'SaleController@getSaleById')->where(['id' => '[0-9]+']);
-        Route::get('', 'SaleController@getSale');
+        Route::get('', 'SaleController@getSale')->name('sale.all');
 
         Route::put('{id}', 'SaleController@putSale')->where(['id' => '[0-9]+']);
 
-        Route::post('client/{clientId}', 'SaleController@postSale')->where(['clientId' => '[0-9]+']);
+        Route::post('client/{clientId}', 'SaleController@postSale')->where(['clientId' => '[0-9]+'])->name('sale.create');
 
         Route::delete('{id}', 'SaleController@deleteSale')->where(['id' => '[0-9]+']);
     });
