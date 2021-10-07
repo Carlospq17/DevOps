@@ -24,11 +24,7 @@ class SaleController extends Controller
     }
 
     public function getSale() {
-        $sales = Sale::all();
-
-        foreach($sales as $sale) {
-            $sale->client;
-        }
+        $sales = Sale::with('client')->get();
 
         return response()->json($sales, 200);
     }
