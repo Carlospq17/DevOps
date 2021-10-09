@@ -6,6 +6,7 @@ use Mockery;
 use Tests\TestCase;
 use App\Models\Client;
 use WithoutMiddleware;
+use RefreshDatabase;
 
 class ClientTest extends TestCase
 {
@@ -56,16 +57,17 @@ class ClientTest extends TestCase
         ->once()
         ->andReturn(Client::class);
 
+        $client = Client::all()->last();
+
         $parameters = [
+            'id' => $client->id,
             'name' => 'NewName',
             'lastname' => 'newLastname',
             'address' => 'newAddress',
             'phone_number' => 999999999
         ];
 
-        $client = Client::all()->last();
-
-        $this->json('PUT', 'api/v1/clients/'.''.$client->id ,$parameters)->assertStatus(200);
+        $this->json('PUT', route('client.update',$parameters))->assertStatus(200);
     }
 
     public function test_delete_client(){
@@ -75,7 +77,7 @@ class ClientTest extends TestCase
         ->andReturnNull();
 
         $client = Client::all()->last();
-        $this->call('DELETE', 'api/v1/clients/'.''.$client->id)->assertStatus(204);
+        $this->call('DELETE', route('client.delete', ['id' => $client->id]))->assertStatus(204);
     }
 
 }
