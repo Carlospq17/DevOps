@@ -3,30 +3,28 @@
 namespace App\Http\Controllers;
 
 use Validator;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\{Client, Sale};
+use App\Repositories\SaleRepository;
 use Illuminate\Support\Facades\{Hash, DB};
-use Illuminate\Support\Str;
 
 class SaleController extends Controller
 {
+    private $repository;
+
+    public function __construct(SaleRepository $repository) {
+        $this->repository = $repository;
+    }
 
     public function getSaleById($id) {
-        $sale = Sale::find($id);
-
-        if(!$sale) {
-            return response()->json(["message" => "Entity not Found"], 404);
-        }
-
-        $sale->client;
-
+        $sale = $this->repository->findById($id);
         return response()->json($sale, 200);
     }
 
     public function getSale() {
-        $sales = Sale::with('client')->get();
-
-        return response()->json($sales, 200);
+        $sale = $this->repository->findAll();
+        return response()->json($sale, 200);
     }
 
     public function postSale(Request $request, $clientId) {
@@ -44,16 +42,7 @@ class SaleController extends Controller
             return response()->json(["message" => "Entity not Found"], 404);
         }
 
-        $sale = new Sale;
-        $sale->total_amount = $request->total_amount;
-        $sale->date = \Carbon\Carbon::now();
-        $sale->client_id = $client->id;
-
-        DB::transaction(function () use ($sale) {
-            $sale->save();
-        });
-
-        $sale->client;
+        $sale = $this->repository->createSale($request,$client->id);
         
         return response()->json($sale, 200);
     }
@@ -67,19 +56,7 @@ class SaleController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $sale = Sale::find($id);
-        
-        if(!$sale) {
-            return response()->json(["message" => "Entity not Found"], 404);
-        }
-
-        $sale->total_amount = $request->total_amount;
-
-        DB::transaction(function () use ($sale) {
-            $sale->save();
-        });
-
-        $sale->client;
+        $sale = $this->repository->updateSale($request,$id);
 
         return response()->json($sale, 200);
     }
@@ -91,8 +68,7 @@ class SaleController extends Controller
             return response()->json(["message" => "Entity not Found"], 404);
         }
 
-        DB::transaction(function () use ($sale) {
-            $sale->delete();
-        });
+        $this->repository->deleteSale($sale);
+        return response()->json([], 204);
     }
 }
