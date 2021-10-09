@@ -28,21 +28,21 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('{id}', 'ClientController@getClientById')->where(['id' => '[0-9]+']);
         Route::get('', 'ClientController@getClient')->name('client.all');
         
-        Route::put('{id}', 'ClientController@putClient')->where(['id' => '[0-9]+']);
+        Route::put('{id}', 'ClientController@putClient')->where(['id' => '[0-9]+'])->name('client.update');
 
         Route::post('', 'ClientController@postClient')->name('client.create');
 
-        Route::delete('{id}', 'ClientController@deleteClient')->where(['id' => '[0-9]+']);
+        Route::delete('{id}', 'ClientController@deleteClient')->where(['id' => '[0-9]+'])->name('client.delete');
     });
 
     Route::group(['middleware' => 'jwt.verify', 'prefix' => 'sales'], function () {
         Route::get('{id}', 'SaleController@getSaleById')->where(['id' => '[0-9]+']);
         Route::get('', 'SaleController@getSale')->name('sale.all');
 
-        Route::put('{id}', 'SaleController@putSale')->where(['id' => '[0-9]+']);
+        Route::put('{id}', 'SaleController@putSale')->where(['id' => '[0-9]+'])->name('sale.update');
 
         Route::post('client/{clientId}', 'SaleController@postSale')->where(['clientId' => '[0-9]+'])->name('sale.create');
 
-        Route::delete('{id}', 'SaleController@deleteSale')->where(['id' => '[0-9]+']);
+        Route::delete('{id}', 'SaleController@deleteSale')->where(['id' => '[0-9]+'])->name('sale.delete');
     });
 });
