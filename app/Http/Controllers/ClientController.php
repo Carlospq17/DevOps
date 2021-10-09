@@ -18,11 +18,7 @@ class ClientController extends Controller
     }
 
     public function getClient() {
-        $clients = Client::All();
-
-        foreach($clients as $client) {
-            $client->user;
-        }
+        $clients = Client::with(['user'])->get();
 
         return response()->json($clients, 200);
     }
