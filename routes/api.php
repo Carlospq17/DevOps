@@ -45,4 +45,15 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::delete('{id}', 'SaleController@deleteSale')->where(['id' => '[0-9]+'])->name('sale.delete');
     });
+
+    Route::group(['middleware' => 'jwt.verify', 'prefix' => 'products'], function () {
+        Route::get('{id}', 'ProductController@getProductById')->where(['id' => '[0-9]+']);
+        Route::get('', 'ProductController@getProduct');
+
+        Route::put('{id}', 'ProductController@putProduct')->where(['id' => '[0-9]+']);
+
+        Route::post('product/', 'ProductController@postProduct');
+
+        Route::delete('{id}', 'ProductController@deleteProduct')->where(['id' => '[0-9]+']);
+    });
 });
