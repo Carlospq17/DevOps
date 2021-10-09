@@ -3,15 +3,22 @@
 namespace App\Http\Controllers;
 
 use Validator;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\{Client, User};
+use App\Repositories\ClientRepository;
 use Illuminate\Support\Facades\{Hash, DB};
-use Illuminate\Support\Str;
 
 class ClientController extends Controller
 {
+    private $repository;
+
+    public function __construct(ClientRepository $repository) {
+        $this->repository = $repository;
+    }
+
     public function getClientById($id) {
-        $client = Client::find($id);
+        $client = $this->repository->findById($id);
 
         if(!$client) {
             return response()->json(["message" => "Entity not Found"], 404);
@@ -23,11 +30,7 @@ class ClientController extends Controller
     }
 
     public function getClient() {
-        $clients = Client::All();
-
-        foreach($clients as $client) {
-            $client->user;
-        }
+        $clients = $this->repository->findAll();
 
         return response()->json($clients, 200);
     }
@@ -44,24 +47,9 @@ class ClientController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $client = Client::find($id);
+        $client = $this->repository->updateClient($request,$id);
 
-        if(!$client) {
-            return response()->json(["message" => "Entity not Found"], 404);
-        }
-
-        $client->name = $request->name? $request->name : $client->name;
-        $client->lastname = $request->lastname? $request->lastname : $client->lastname;
-        $client->address = $request->address? $request->address : $client->address;
-        $client->phone_number = $request->phone_number? $request->phone_number : $client->phone_number;
-
-        DB::transaction(function () use ($client) {
-            $client->save();
-        });
-
-        $client->user;
-
-        return response()->json($client, 200);
+        return (!$client)? response()->json(["message" => "Entity not Found"], 404): response()->json($client, 200);
     }
 
     public function postClient(Request $request) {
@@ -78,28 +66,9 @@ class ClientController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $user = new User;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->status = true;
-        $user->remember_token = Str::random(10);
+        $client = $this->repository->createClient($request);
 
-        $client = new Client;
-        $client->name = $request->name;
-        $client->lastname = $request->lastname;
-        $client->address = $request->address;
-        $client->phone_number = $request->phone_number;
-
-        DB::transaction(function () use ($user, $client) {
-            $user->save();
-
-            $client->user_id = $user->id;
-            $client->save();
-        });
-
-        $client->user;
-
-        return response()->json($client, 201);;
+        return response()->json($client, 201);
     }
 
     public function deleteClient($id) {
@@ -109,11 +78,7 @@ class ClientController extends Controller
             return response()->json(["message" => "Entity not Found"], 404);
         }
 
-        $user = User::find($client->user_id);
-
-        DB::transaction(function () use ($client, $user) {    
-            $user->delete();
-            $client->delete();
-        });
+        $this->repository->deleteClient($client);
+        return response()->json([], 204);
     }
 }
