@@ -11,7 +11,12 @@ use Illuminate\Support\Str;
 class ClientController extends Controller
 {
     public function getClientById($id) {
-        $client = Client::findOrFail($id);
+        $client = Client::find($id);
+
+        if(!$client) {
+            return response()->json(["message" => "Entity not Found"], 404);
+        }
+
         $client->user;
 
         return response()->json($client, 200);
@@ -35,7 +40,11 @@ class ClientController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $client = Client::findOrFail($id);
+        $client = Client::find($id);
+
+        if(!$client) {
+            return response()->json(["message" => "Entity not Found"], 404);
+        }
 
         $client->name = $request->name? $request->name : $client->name;
         $client->lastname = $request->lastname? $request->lastname : $client->lastname;
@@ -90,8 +99,13 @@ class ClientController extends Controller
     }
 
     public function deleteClient($id) {
-        $client = Client::findOrFail($id);
-        $user = User::findOrFail($client->user_id);
+        $client = Client::find($id);
+
+        if(!$client) {
+            return response()->json(["message" => "Entity not Found"], 404);
+        }
+
+        $user = User::find($client->user_id);
 
         DB::transaction(function () use ($client, $user) {    
             $user->delete();
