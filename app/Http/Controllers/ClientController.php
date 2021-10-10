@@ -68,7 +68,7 @@ class ClientController extends Controller
 
         $client = $this->repository->createClient($request);
 
-        return response()->json($client, 201);;
+        return response()->json($client, 201);
     }
 
     public function deleteClient($id) {
