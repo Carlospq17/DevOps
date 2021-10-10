@@ -49,7 +49,7 @@ class ClientTest extends TestCase
             'phone_number' => 999999999
         ];
 
-        $this->json('POST', route('client.create', $parameters))->assertStatus(201);
+        $this->json('POST', route('user.register', $parameters))->assertStatus(201);
     }
 
     public function test_update_client_information(){
