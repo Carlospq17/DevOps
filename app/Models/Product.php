@@ -12,4 +12,14 @@ class Product extends Model
     protected $fillable = ['name', 'brand', 'price', 'net_weight', 'category'];
     
     public $timestamps = false;
+
+    /**
+     * The Sales that belong to the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function Sales(): BelongsToMany
+    {
+        return $this->belongsToMany(Sale::class, 'sales_products', 'sales_id', 'products_id');
+    }
 }
