@@ -22,26 +22,37 @@ Route::group(['prefix' => 'v1'], function () {
     });
 
     Route::group(['middleware'=>'jwt.verify','prefix'=>'users'],function () {
-        Route::get('me', 'UserController@getCurrentUser');
+        Route::get('me', 'UserController@getCurrentUser')->name('user.me');
     });
 
     Route::group(['middleware'=>'jwt.verify','prefix'=>'clients'], function () {
         Route::get('{id}', 'ClientController@getClientById')->where(['id' => '[0-9]+']);
-        Route::get('', 'ClientController@getClient');
+        Route::get('', 'ClientController@getClient')->name('client.all');
         
-        Route::put('{id}', 'ClientController@putClient')->where(['id' => '[0-9]+']);
+        Route::put('{id}', 'ClientController@putClient')->where(['id' => '[0-9]+'])->name('client.update');
 
         Route::delete('{id}', 'ClientController@deleteClient')->where(['id' => '[0-9]+']);
     });
 
     Route::group(['middleware' => 'jwt.verify', 'prefix' => 'sales'], function () {
         Route::get('{id}', 'SaleController@getSaleById')->where(['id' => '[0-9]+']);
-        Route::get('', 'SaleController@getSale');
+        Route::get('', 'SaleController@getSale')->name('sale.all');
 
-        Route::put('{id}', 'SaleController@putSale')->where(['id' => '[0-9]+']);
+        Route::put('{id}', 'SaleController@putSale')->where(['id' => '[0-9]+'])->name('sale.update');
 
-        Route::post('client/{clientId}', 'SaleController@postSale')->where(['clientId' => '[0-9]+']);
+        Route::post('client/{clientId}', 'SaleController@postSale')->where(['clientId' => '[0-9]+'])->name('sale.create');
 
-        Route::delete('{id}', 'SaleController@deleteSale')->where(['id' => '[0-9]+']);
+        Route::delete('{id}', 'SaleController@deleteSale')->where(['id' => '[0-9]+'])->name('sale.delete');
+    });
+
+    Route::group(['middleware' => 'jwt.verify', 'prefix' => 'products'], function () {
+        Route::get('{id}', 'ProductController@getProductById')->where(['id' => '[0-9]+']);
+        Route::get('', 'ProductController@getProduct');
+
+        Route::put('{id}', 'ProductController@putProduct')->where(['id' => '[0-9]+']);
+
+        Route::post('product/', 'ProductController@postProduct');
+
+        Route::delete('{id}', 'ProductController@deleteProduct')->where(['id' => '[0-9]+']);
     });
 });
