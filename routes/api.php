@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'auth'], function () {
-        Route::post('login', 'AuthController@login')->name('user.login');
+        Route::post('login', 'AuthController@login');
+        Route::post('register', 'ClientController@postClient');
     });
 
     Route::group(['middleware'=>'jwt.verify','prefix'=>'users'],function () {
@@ -30,9 +31,7 @@ Route::group(['prefix' => 'v1'], function () {
         
         Route::put('{id}', 'ClientController@putClient')->where(['id' => '[0-9]+'])->name('client.update');
 
-        Route::post('', 'ClientController@postClient')->name('client.create');
-
-        Route::delete('{id}', 'ClientController@deleteClient')->where(['id' => '[0-9]+'])->name('client.delete');
+        Route::delete('{id}', 'ClientController@deleteClient')->where(['id' => '[0-9]+']);
     });
 
     Route::group(['middleware' => 'jwt.verify', 'prefix' => 'sales'], function () {
