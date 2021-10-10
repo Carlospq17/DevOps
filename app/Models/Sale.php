@@ -19,4 +19,14 @@ class Sale extends Model
     {
         return $this->belongsTo('App\Models\Client');
     }
+
+    /**
+     * The Products that belong to the Sale
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function Products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'sales_products', 'sales_id', 'products_id');
+    }
 }
