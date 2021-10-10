@@ -20,6 +20,13 @@ class ClientRepository
     }
 
     public function createClient(Request $request){
+
+        $user = User::where('email', $request->email)->first();
+
+        if($user) {
+            return;
+        }
+
         $user = new User;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
@@ -71,6 +78,4 @@ class ClientRepository
             $client->delete();
         });
     }
-
-
 }
