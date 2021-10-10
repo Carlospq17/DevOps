@@ -68,6 +68,10 @@ class ClientController extends Controller
 
         $client = $this->repository->createClient($request);
 
+        if(!$client) {
+            return response()->json(["message" => "Unprocessable Entity"], 422);
+        }
+
         return response()->json($client, 201);;
     }
 
