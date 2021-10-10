@@ -47,13 +47,13 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['middleware' => 'jwt.verify', 'prefix' => 'products'], function () {
         Route::get('{id}', 'ProductController@getProductById')->where(['id' => '[0-9]+']);
-        Route::get('', 'ProductController@getProduct');
+        Route::get('', 'ProductController@getProduct')->name('product.all');
 
-        Route::put('{id}', 'ProductController@putProduct')->where(['id' => '[0-9]+']);
+        Route::put('{id}', 'ProductController@putProduct')->where(['id' => '[0-9]+'])->name('product.update');
 
-        Route::post('product/', 'ProductController@postProduct');
+        Route::post('product/', 'ProductController@postProduct')->name('product.register');
 
-        Route::delete('{id}', 'ProductController@deleteProduct')->where(['id' => '[0-9]+']);
+        Route::delete('{id}', 'ProductController@deleteProduct')->where(['id' => '[0-9]+'])->name('product.delete');
     });
 
     Route::group(['middleware' => 'jwt.verify', 'prefix' => 'sales_products'], function () {
