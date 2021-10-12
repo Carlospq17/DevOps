@@ -25,7 +25,7 @@ class SaleTest extends TestCase
 
         $sale = Sale::all()->last();
     
-        $this->call('GET', 'api/v1/sales/'.''. $sale->id)->assertStatus(200);
+        $this->call('GET', 'api/v1/sales/'.''. $sale->id)->assertStatus(300);
     }
 
     public function test_get_all_sales()
