@@ -16,7 +16,7 @@ class SaleTest extends TestCase
     {
         parent::setUp();
         $this->withoutMiddleware();
-        $this->saleMock = Mockery::mock('overload:ClientRepository');
+        $this->saleMock = Mockery::mock('overload:SaleRepository');
     }
 
     public function test_find_sale()
