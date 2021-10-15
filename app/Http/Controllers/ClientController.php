@@ -6,6 +6,7 @@ use Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\{Client, User};
+use Illuminate\Support\Facades\Log;
 use App\Repositories\ClientRepository;
 use Illuminate\Support\Facades\{Hash, DB};
 
@@ -53,6 +54,14 @@ class ClientController extends Controller
     }
 
     public function postClient(Request $request) {
+        Log::info('Client Registration',
+        [
+            'url'=> $request->fullUrl(),
+            'queryParameters' => json_encode($request->all()),
+            'routeParameters' => json_encode($request->route()->parameters()),
+            'headers' => json_encode($request->header())
+        ]);
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
@@ -63,14 +72,18 @@ class ClientController extends Controller
         ]);
 
         if($validator->fails()) {
+            Log::warning("Invalid Client Request Structure",['errors'=>json_encode($validator->errors())]);
             return response()->json($validator->errors(), 400);
         }
 
         $client = $this->repository->createClient($request);
 
         if(!$client) {
+            Log::warning("Client already exists, no action was perfomed.");
             return response()->json(["message" => "Unprocessable Entity"], 422);
         }
+
+        Log::debug("Client Created", ["client"=> json_encode($client)]);
 
         return response()->json($client, 201);;
     }
