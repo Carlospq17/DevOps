@@ -26,12 +26,14 @@ class ClientController extends Controller
         }
 
         $client->user;
+        Log::debug("Client Found", ["client"=> $client]);
 
         return response()->json($client, 200);
     }
 
     public function getClient() {
         $clients = $this->repository->findAll();
+        Log::debug("Found Client List", ["clients"=> json_encode($clients)]);
 
         return response()->json($clients, 200);
     }
@@ -45,22 +47,22 @@ class ClientController extends Controller
         ]);
 
         if($validator->fails()) {
+            Log::warning("Invalid Client Update Request Structure",['errors'=>json_encode($validator->errors())]);
             return response()->json($validator->errors(), 400);
         }
 
         $client = $this->repository->updateClient($request,$id);
 
-        return (!$client)? response()->json(["message" => "Entity not Found"], 404): response()->json($client, 200);
+
+        if(!$client){
+            Log::warning("Client not found, no action was perfomed");
+            return response()->json(["message" => "Entity not Found"], 404);
+        }
+
+        return response()->json($client, 200);
     }
 
     public function postClient(Request $request) {
-        Log::info('Client Registration',
-        [
-            'url'=> $request->fullUrl(),
-            'queryParameters' => json_encode($request->all()),
-            'routeParameters' => json_encode($request->route()->parameters()),
-            'headers' => json_encode($request->header())
-        ]);
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',

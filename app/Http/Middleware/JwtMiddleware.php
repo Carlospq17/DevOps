@@ -18,13 +18,6 @@ class JwtMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        Log::info('Authenticated API Endpoint Request',
-        [
-            'url'=> $request->fullUrl(),
-            'queryParameters' => json_encode($request->all()),
-            'routeParameters' => json_encode($request->route()->parameters()),
-            'headers' => json_encode($request->header())
-        ]);
         try {
             if(empty($request->bearerToken())){
                 Log::error("Token Validation", ['error'=> 'No Token Found' . $request->bearerToken()]);

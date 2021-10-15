@@ -12,12 +12,6 @@ class AuthController extends Controller
 
 
     public function login(Request $request){
-        Log::info('Autenticación de usuario',
-        [
-            'url'=> route('user.login'),
-            'parameters' => json_encode($request->all()),
-            'headers' => json_encode($request->header())
-        ]);
 
         $validator = Validator::make($request->all(),[
             'email' => 'required|email',
