@@ -26,13 +26,13 @@ class AuthController extends Controller
 
         //Validamos la estructura de los campos del request
         if($validator->fails()){
-            Log::warning("Estructura de petición incorrecta",['errors'=>json_encode($validator->errors())]);
+            Log::warning("Invalid Request Structure",['errors'=>json_encode($validator->errors())]);
             return response()->json($validator->errors(),400);
         }
 
         //Se procede a validar las credenciales del usuario
         if(! $token = auth()->attempt($validator->validated())){
-            Log::warning("Usuario No Existente",['credenciales'=>json_encode($validator->valid())]);
+            Log::warning("User Not found",['credenciales'=>json_encode($validator->valid())]);
             return response()->json(['error' => 'Invalid Credentials'],400);
         }
 
