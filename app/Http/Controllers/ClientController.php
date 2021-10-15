@@ -22,6 +22,7 @@ class ClientController extends Controller
         $client = $this->repository->findById($id);
 
         if(!$client) {
+            Log::warning(trans('logger.entity_not_found',['entityName'=>'Client','entityId'=>$id]));
             return response()->json(["message" => "Entity not Found"], 404);
         }
 
@@ -55,9 +56,11 @@ class ClientController extends Controller
 
 
         if(!$client){
-            Log::warning("Client not found, no action was perfomed");
+            Log::warning(trans('logger.entity_not_found',['entityName'=>'Client','entityId'=>$id]));
             return response()->json(["message" => "Entity not Found"], 404);
         }
+
+        Log::debug("Client Updated", ["client"=> json_encode($client)]);
 
         return response()->json($client, 200);
     }
@@ -74,7 +77,7 @@ class ClientController extends Controller
         ]);
 
         if($validator->fails()) {
-            Log::warning("Invalid Client Request Structure",['errors'=>json_encode($validator->errors())]);
+            Log::warning("Invalid Client Post Request Structure",['errors'=>json_encode($validator->errors())]);
             return response()->json($validator->errors(), 400);
         }
 
@@ -94,6 +97,7 @@ class ClientController extends Controller
         $client = Client::find($id);
 
         if(!$client) {
+            Log::warning(trans('logger.entity_not_found',['entityName'=>'Client','entityId'=>$id]));
             return response()->json(["message" => "Entity not Found"], 404);
         }
 
