@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\{Client, Sale};
 use App\Repositories\SaleRepository;
-use Illuminate\Support\Facades\{Hash, DB};
+use Illuminate\Support\Facades\{Hash, DB, Log};
 
 class SaleController extends Controller
 {
@@ -19,12 +19,42 @@ class SaleController extends Controller
 
     public function getSaleById($id) {
         $sale = $this->repository->findById($id);
+
+        if(!$sale) {
+            Log::warning(
+                trans(
+                    'logger.error.entity_not_found',
+                    ['entityName' => 'Sale', 'entityId' => $id]
+                )
+            );
+
+            return response()->json(["message" => "Entity not Found"], 404);
+        }
+
+        $sale->client;
+        Log::debug(
+            trans(
+                'logger.http_method.getId',
+                ['entityName' => 'Sale']
+            ),
+            ['sale' => $sale]
+        );
+
         return response()->json($sale, 200);
     }
 
     public function getSale() {
-        $sale = $this->repository->findAll();
-        return response()->json($sale, 200);
+        $sales = $this->repository->findAll();
+
+        Log::debug(
+            trans(
+                'logger.http_method.get',
+                ['entityName' => 'Sale']
+            ),
+            ['sales' => json_encode($sales)]
+        );
+
+        return response()->json($sales, 200);
     }
 
     public function postSale(Request $request, $clientId) {
@@ -33,18 +63,40 @@ class SaleController extends Controller
         ]);
 
         if($validator->fails()) {
+            Log::warning(
+                trans(
+                    'logger.validate.invalid_post',
+                    ['entityName' => 'Sale']
+                ),
+                ['errors' => json_encode($validator->errors())]
+            );
+
             return response()->json($validator->errors(), 400);
         }
 
         $client = Client::find($clientId);
 
-        if(!$client) {
+        if(!$client) {            
+            Log::warning(
+                trans(
+                    'logger.error.entity_not_found',
+                    ['entityName' => 'Client', 'entityId' => $clientId]
+                )
+            );
+
             return response()->json(["message" => "Entity not Found"], 404);
         }
 
         $sale = $this->repository->createSale($request,$client->id);
+        Log::debug(
+            trans(
+                'logger.http_method.post',
+                ['entityName' => 'Sale']
+            ),
+            ['sale' => $sale]
+        );
         
-        return response()->json($sale, 200);
+        return response()->json($sale, 201);
     }
 
     public function putSale(Request $request, $id) {
@@ -53,10 +105,38 @@ class SaleController extends Controller
         ]);
 
         if($validator->fails()) {
+            Log::warning(
+                trans(
+                    'logger.validate.invalid_put',
+                    ['entityName' => 'Sale']
+                ),
+                ['errors' => json_encode($validator->errors())]
+            );
+
             return response()->json($validator->errors(), 400);
         }
 
-        $sale = $this->repository->updateSale($request,$id);
+        $sale = Sale::find($id);
+
+        if(!$sale) {
+            Log::warning(
+                trans(
+                    'logger.error.entity_not_found',
+                    ['entityName' => 'Sale', 'entityId' => $id]
+                )
+            );
+            
+            return response()->json(["message" => "Entity not Found"], 404);
+        }
+
+        $sale = $this->repository->updateSale($request, $sale);
+        Log::debug(
+            trans(
+                'logger.http_method.put',
+                ['entityName' => 'Sale']
+            ),
+            ['sale' => $sale]
+        );
 
         return response()->json($sale, 200);
     }
@@ -65,10 +145,24 @@ class SaleController extends Controller
         $sale = Sale::find($id);
         
         if(!$sale) {
+            Log::warning(
+                trans(
+                    'logger.error.entity_not_found',
+                    ['entityName' => 'Sale', 'entityId' => $id]
+                )
+            );
+
             return response()->json(["message" => "Entity not Found"], 404);
         }
 
         $this->repository->deleteSale($sale);
+        Log::debug(
+            trans(
+                'logger.http_method.delete',
+                ['entityName' => 'Sale']
+            )
+        );
+
         return response()->json([], 204);
     }
 }

@@ -13,7 +13,8 @@ class Client extends Model
     public $timestamps = false;
 
     protected $hidden = [
-        'user_id'
+        'user_id',
+        'phone_number'
     ];
 
     public function user()
