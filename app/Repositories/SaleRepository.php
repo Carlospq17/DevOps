@@ -32,10 +32,7 @@ class SaleRepository
         return $sale;
     }
 
-    public function updateSale(Request $request, $id) {
-
-        $sale = Sale::find($id);
-        
+    public function updateSale(Request $request, $sale) {
         if($sale) {
             $sale->total_amount = $request->total_amount;
 
