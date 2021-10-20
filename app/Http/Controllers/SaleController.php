@@ -18,6 +18,7 @@ class SaleController extends Controller
     }
 
     public function getSaleById($id) {
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . "]");
         $sale = $this->repository->findById($id);
 
         if(!$sale) {
@@ -44,6 +45,7 @@ class SaleController extends Controller
     }
 
     public function getSale() {
+        Log::debug("Method: " . __FUNCTION__);
         $sales = $this->repository->findAll();
 
         Log::debug(
@@ -58,6 +60,7 @@ class SaleController extends Controller
     }
 
     public function postSale(Request $request, $clientId) {
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [clientId => ". $clientId . " request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(), [
             'total_amount' => 'required|numeric',
         ]);
@@ -100,6 +103,7 @@ class SaleController extends Controller
     }
 
     public function putSale(Request $request, $id) {
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . " request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(), [
             'total_amount' => 'required|numeric'
         ]);
@@ -142,6 +146,7 @@ class SaleController extends Controller
     }
 
     public function deleteSale($id) {
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . "]");
         $sale = Sale::find($id);
         
         if(!$sale) {

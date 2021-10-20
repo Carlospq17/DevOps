@@ -12,7 +12,7 @@ class AuthController extends Controller
 
 
     public function login(Request $request){
-
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(),[
             'email' => 'required|email',
             'password' => 'required|string',
