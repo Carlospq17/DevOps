@@ -9,7 +9,6 @@ pipeline {
     stages {
         stage('Install') {
             steps {
-                git url:'https://github.com/Carlospq17/DevOps.git', branch:'jenkins_file'
                 //Se realiza la instalación de las dependencias
                 sh 'composer update'
                 sh 'composer dump-autoload'
