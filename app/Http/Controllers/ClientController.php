@@ -104,7 +104,7 @@ class ClientController extends Controller
     }
 
     public function postClient(Request $request) {
-        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . " request => ". json_encode($request->all()) . "]");
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
