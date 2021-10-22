@@ -19,6 +19,7 @@ class ClientController extends Controller
     }
 
     public function getClientById($id) {
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . "]");
         $client = $this->repository->findById($id);
 
         if(!$client) {
@@ -44,6 +45,7 @@ class ClientController extends Controller
     }
 
     public function getClient() {
+        Log::debug("Method: " . __FUNCTION__);
         $clients = $this->repository->findAll();
         Log::debug(
             trans(
@@ -57,6 +59,7 @@ class ClientController extends Controller
     }
 
     public function putClient(Request $request, $id) {
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . " request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(), [
             'name' => 'string|max:255',
             'lastname' => 'string|max:255',
@@ -101,6 +104,7 @@ class ClientController extends Controller
     }
 
     public function postClient(Request $request) {
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . " request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
@@ -147,6 +151,7 @@ class ClientController extends Controller
     }
 
     public function deleteClient($id) {
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id. "]");
         $client = Client::find($id);
 
         if(!$client) {

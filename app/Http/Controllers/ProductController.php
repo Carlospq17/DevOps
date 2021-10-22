@@ -17,6 +17,7 @@ class ProductController extends Controller
     }
 
     public function getProductById($id){
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id. "]");
         $product = $this->repository->findById($id);
 
         if(!$product) {
@@ -42,6 +43,7 @@ class ProductController extends Controller
     }
 
     public function getProduct(){
+        Log::debug("Method: " . __FUNCTION__);
         $products = $this->repository->findAll();
 
         Log::debug(
@@ -56,6 +58,7 @@ class ProductController extends Controller
     }
 
     public function postProduct(Request $request){
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|unique:products',
             'brand' => 'required|string',
@@ -89,6 +92,7 @@ class ProductController extends Controller
     }
 
     public function putProduct(Request $request, $id){
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . " request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(), [
             'name' => 'string|unique:products,name,'.$id,
             'brand' => 'string',
@@ -135,6 +139,7 @@ class ProductController extends Controller
     }
 
     public function deleteProduct($id){
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . "]");
         $product = Product::find($id);
 
         if(!$product) {

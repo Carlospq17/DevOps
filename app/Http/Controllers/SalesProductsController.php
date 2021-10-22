@@ -17,6 +17,7 @@ class SalesProductsController extends Controller
     }
 
     public function getSaleProductById($id){
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . "]");
         $sale_product = $this->repository->findById($id);
 
         if(!$sale_product) {
@@ -42,6 +43,7 @@ class SalesProductsController extends Controller
     }
 
     public function getSaleProduct(){
+        Log::debug("Method: " . __FUNCTION__);
         $sales_products = $this->repository->findAll();
         Log::debug(
             trans(
@@ -55,6 +57,7 @@ class SalesProductsController extends Controller
     }
 
     public function postSaleProduct(Request $request){
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(), [
             'sales_id' => 'required|integer|exists:sales,id',
             'products_id' => 'required|integer|exists:products,id',
@@ -86,6 +89,7 @@ class SalesProductsController extends Controller
     }
 
     public function putSaleProduct(Request $request, $id){
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . " request => ". json_encode($request->all()) . "]");
         $validator = Validator::make($request->all(), [
             'sales_id' => 'integer|exists:sales,id',
             'products_id' => 'integer|exists:products,id',
@@ -129,6 +133,7 @@ class SalesProductsController extends Controller
     }
 
     public function deleteSaleProduct($id){
+        Log::debug("Method: " . __FUNCTION__. " Parameters => [id => ". $id . "]");
         $sale_product = SalesProducts::find($id);
 
         if(!$sale_product) {
