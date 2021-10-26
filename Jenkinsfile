@@ -7,17 +7,13 @@ pipeline {
     }
 
     stages {
-        stage('Install') {
+
+        stage('Test') {
             steps {
                 //Se realiza la instalación de las dependencias
                 sh 'composer update'
                 sh 'composer dump-autoload'
                 sh 'composer install'
-            }
-        }
-
-        stage('Test') {
-            steps {
                 //Copiamos el contenido del archivo .env.testing a .env
                 sh 'cp .env.test .env'
                 sh 'php artisan key:generate'
