@@ -22,10 +22,10 @@ pipeline {
         stage('Test') {
             steps {
                 //Corremos migraciones y llenamos la base de datos
-                sh 'php artisan mysql:createdb'
-                sh 'php artisan migrate:fresh'
-                sh 'php artisan db:seed'
-                sh './vendor/bin/phpunit'
+                //sh 'php artisan mysql:createdb'
+                //sh 'php artisan migrate:fresh'
+                //sh 'php artisan db:seed'
+                //sh './vendor/bin/phpunit'
             }
         }
 
