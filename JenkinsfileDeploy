@@ -11,7 +11,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 //Cambiamos el host de la base de datos al del contenedor en docker
-                sh 'cp .env.prod .env'
+                sh 'cp .env.test .env'
+                sh "sed -i -e 's/DB_HOST=localhost/DB_HOST=172.17.0.2/g' .env"
                 //Paramos el contenedor y lo eliminamos
                 sh 'docker stop ${CONTAINER_NAME} || true && docker rm ${CONTAINER_NAME} || true'
                 //Generamos la nueva imagen
