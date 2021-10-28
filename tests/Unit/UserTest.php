@@ -24,7 +24,7 @@ class UserTest extends TestCase
         $this->json('POST', route('user.login'),[
             'email' => $current_user->email,
             'password' => 'root'
-        ])->assertStatus(200)->assertJsonStructure(
+        ])->assertStatus(400)->assertJsonStructure(
             [
                 'access_token',
                 'token_type',
@@ -37,7 +37,7 @@ class UserTest extends TestCase
         $token = JWTAuth::fromUser($this->user);
 
         $this->json('GET', route('user.me'), [], ['Authorization'=> 'Bearer ' . $token])
-        ->assertStatus(200)
+        ->assertStatus(400)
         ->assertJsonStructure(
             [
                 'id',
