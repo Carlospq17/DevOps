@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['prefix' => 'v1', 'middleware'=>'log.route'], function () {
+    Route::get('health', function () {
+        return response('Its healthy',200);
+    });
+
     Route::group(['prefix' => 'auth'], function () {
         Route::post('login', 'AuthController@login')->name('user.login');
         Route::post('register', 'ClientController@postClient')->name('user.register');
