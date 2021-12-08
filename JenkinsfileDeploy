@@ -18,7 +18,7 @@ pipeline {
                 //Generamos la nueva imagen
                 sh 'docker build -t devops-${BRANCH_NAME}:1.0.0-${BUILD_NUMBER} .'
                 //Creamos el contenedor con la imagen y la iniciamos
-                sh 'docker container create --name=${CONTAINER_NAME} -p 8000:8000 devops-${BRANCH_NAME}:1.0.0-${BUILD_NUMBER}'
+                sh 'docker container create --name=${CONTAINER_NAME} --net bridge -p 8000:8000 devops-${BRANCH_NAME}:1.0.0-${BUILD_NUMBER}'
                 sh 'docker container start ${CONTAINER_NAME}'
             }
         }

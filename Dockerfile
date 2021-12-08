@@ -7,6 +7,7 @@ COPY . /app
 #Establecimiento de la configuración de logstash
 RUN rm /usr/share/logstash/pipeline/logstash.conf
 COPY logstash.conf /usr/share/logstash/pipeline/
+COPY logstash.yml /opt/logstash/config/
 
 #Instalacion de  php7.4
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
